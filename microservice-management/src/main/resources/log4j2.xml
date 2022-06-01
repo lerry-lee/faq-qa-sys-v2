@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="300">
+    <!--    配置log的输出目录-->
+    <properties>
+        <property name="Log_Dir">logs</property>
+    </properties>
+    <!--    自定义log输出-->
+    <Appenders>
+        <!--        输出到控制台上-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36}(%F:%L) - %msg%n"/>
+        </Console>
+        <!--        按时间和大小滚动日志文件-->
+        <RollingRandomAccessFile name="File1"
+                                 fileName="${Log_Dir}/unrecognized_questions.log"
+                                 filePattern="${Log_Dir}/$${date:yyyy-MM-dd}/unrecognized_questions-%d{MM-dd-yyyy}.log">
+            <PatternLayout
+                    pattern="%msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+        <!--        按时间和大小滚动日志文件-->
+        <RollingRandomAccessFile name="File2"
+                                 fileName="${Log_Dir}/insert_failed_data.log"
+                                 filePattern="${Log_Dir}/$${date:yyyy-MM-dd}/insert_failed_data-%d{MM-dd-yyyy}.log">
+            <PatternLayout
+                    pattern="%msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="error">
+            <AppenderRef ref="Console"/>
+        </Root>
+        <!--        additivity开启的话，由于这个logger也是满足root的，所以会被打印两遍-->
+        <!--        详细追踪-->
+        <Logger name="TRACE_ALL" level="debug" additivity="false" includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <!--        additivity开启的话，由于这个logger也是满足root的，所以会被打印两遍-->
+        <!--        记录未识别问题-->
+        <Logger name="Record_Unrecognized_Question" level="debug" additivity="false" includeLocation="true">
+            <!--            写入文件-->
+            <AppenderRef ref="File1"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <!--        记录插入失败的数据-->
+        <Logger name="Record_Insert_Failed_Data" level="debug" additivity="false" includeLocation="true">
+            <!--            写入文件-->
+            <AppenderRef ref="File2"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+</Configuration>

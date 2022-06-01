@@ -1,0 +1,77 @@
+server:
+  port: 8800
+spring:
+  #mysql连接
+  datasource:
+    url: jdbc:mysql://localhost:3306/qadb?characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    throw-exception-if-no-handler-found: true
+  #redis连接
+  redis:
+    host: localhost
+    port: 6379
+    database: 15
+    jedis:
+      pool:
+        max-active: 50
+        min-idle: 20
+    #password: lerry_lca.Redis
+  #引入自定义配置，application-user.yml
+#  profiles:
+#    include:
+#      - user
+  cloud:
+    nacos:
+      discovery:
+        # 指定nacos server的地址
+        server-addr: localhost:8848
+  #        # 命名空间id
+  #        namespace: 08287b74-c8fd-438d-8d09-bad02d92ad90
+  #        # 集群名
+  #        cluster-name: NJ
+  #         #元数据信息
+  #        metadata:
+  #          instance: 实例2
+    sentinel:
+  #    filter:
+  #      # 打开/关闭对springMVC端点的保护
+  #      enabled: true
+      transport:
+        # 指定sentinel控制台
+        dashboard: localhost:8080
+  application:
+    # 服务名称
+    name: microservice-management
+# actuator/sentinel,暴露的健康检查服务端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+rocketmq:
+  name-server: localhost:9876
+#es连接
+elasticsearch:
+  #节点1(若有集群，可往后追加，并修改配置类ElasticsearchConfig.java)
+  node-1:
+    host: localhost
+    port: 9200
+#管理配置选项
+managements:
+  #es索引，用于和MySQL表同步，默认mysql表和es索引同名
+  index:
+    #标准问-标准答
+    stdq-stda: stdq_stda
+    #标准问-相似问
+    stdq-simq: stdq_simq
+  #存放常用elasticsearch API的路径
+  elasticsearch-API-path: data/elasticsearch_API
+  #多轮问答树路径
+  multi-turn-qa:
+    path: data/multi_turn_qa

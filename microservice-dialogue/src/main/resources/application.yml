@@ -1,0 +1,94 @@
+server:
+  port: 8700
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  #redis连接
+  redis:
+    host: localhost
+    port: 6379
+    database: 15
+    jedis:
+      pool:
+        max-active: 50
+        min-idle: 20
+#    password: lerry_lca.Redis
+  #引入自定义配置，application-user.yml
+#  profiles:
+#    include:
+#      - user
+  cloud:
+    nacos:
+      discovery:
+        # 指定nacos server的地址
+        server-addr: localhost:8848
+    sentinel:
+      #    filter:
+      #      # 打开/关闭对springMVC端点的保护
+      #      enabled: true
+      transport:
+        # 指定sentinel控制台
+        dashboard: localhost:8080
+  application:
+    # 服务名称
+    name: microservice-dialogue
+#es连接
+elasticsearch:
+  #节点1(若有集群，可往后追加，并修改配置类ElasticsearchConfig.java)
+  node-1:
+    host: localhost
+    port: 9200
+# actuator/sentinel
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    # 小坑：必须指定group
+    group: test-group
+#相似度计算配置
+similarity:
+  #模型1（如有多种相似度模型，可往后追加并修改配置类com/example/qa/config/SimilarityConfig.java）
+  model-1:
+    request-url: http://[::1]:6100/calculate_similarity
+#对话配置
+dialogue:
+  #置信度排序
+  confidence-rank:
+    #返回的置信度最高的doc的个数
+    size: 5
+    #置信度计算权重
+    weights:
+      #相关度权重
+      relevance-weight: 1e-6
+      #相似度权重
+      similarity-weight: 1
+    #阈值（暂未配置该项参数）
+    threshold: 0.8
+  #用户对话状态
+  status:
+    #过期时间(单位: minute)
+    expire-time: 2
+  #redis热点数据缓存
+  hot-data:
+    #是否开启
+    open: true
+    #过期时间(单位: minute)
+    expire-time: 5
+#检索配置
+retrieval:
+  #es索引，用于和MySQL表同步和检索数据，默认mysql表和es索引同名
+  index:
+    #标准问-标准答
+    stdq_stda: stdq_stda
+    #标准问-相似问
+    stdq-simq: stdq_simq
+  search:
+    #搜索返回的最相关docs的个数
+    size: 80

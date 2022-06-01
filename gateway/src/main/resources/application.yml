@@ -1,0 +1,25 @@
+server:
+  port: 8900
+spring:
+  application:
+    # 注册到nacos的服务名
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        #nacos server地址
+        server-addr: localhost:8848
+    gateway:
+      discovery:
+        locator:
+          #让gateway通过服务发现组件找到其他的微服务
+          enabled: true
+#actuator暴露健康端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
